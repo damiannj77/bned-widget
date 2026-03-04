@@ -682,6 +682,25 @@
     }, 4000);
   });
 
+  // ── Auto-resize: tell parent iframe our height ──
+
+  function sendHeight() {
+    var height = document.body.scrollHeight;
+    window.parent.postMessage({ bned_widget_height: height }, '*');
+  }
+
+  // Send height after content loads and on resize
+  window.addEventListener('load', function() {
+    setTimeout(sendHeight, 500);
+    setTimeout(sendHeight, 1500);
+  });
+  window.addEventListener('resize', sendHeight);
+
+  // Also send height when images load (they change the layout)
+  document.addEventListener('load', function(e) {
+    if (e.target.tagName === 'IMG') sendHeight();
+  }, true);
+
 })();
 </script>
 
